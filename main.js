@@ -1,23 +1,20 @@
 
+const pScore = document.getElementById("p-score");
+const cScore = document.getElementById("c-score");
+const pChoice = document.getElementById("p-choice");
+const cChoice = document.getElementById("c-choice");
+const rWinner = document.getElementById("r-winner");
+const fWinner = document.getElementById("f-winner");
 
+let playerScore = 0;
+let computerScore = 0;
 
+let playerChoice = "";
+let computerChoice = "";
 
-function getPlayerChoice(){
-
-    let promptt = "";
-    promptt = prompt("ROCK, PAPER or SCISSORS?");
-    let playerChoice = promptt.toUpperCase();
-
-    console.log(`Player: ${playerChoice}`);
-    return playerChoice 
-}
-
-
-function getComputerChoice (){
+function getComputerChoice (){  // gets random num from one to three
     const rNum = Math.floor(Math.random() * 3);
 
-    let computerChoice = "";
-    
     if(rNum == 1){
         computerChoice = "ROCK";
     }
@@ -28,62 +25,74 @@ function getComputerChoice (){
         computerChoice = "SCISSORS";
     }
 
-    console.log(`Computer: ${computerChoice}`);
-    return computerChoice;
     
 }
 
 
-let playerScore = 0;
-let computerScore = 0;
-
-
-function playRound(playerSelection, computerSelection){
+function playRound(){  // play rounds until player or computer gets 5 wins, than reset
 
     let winner = "";
-
-    if(playerSelection === "ROCK" || playerSelection === "PAPER" || playerSelection === "SCISSORS"){
-        if(playerSelection === computerSelection){
-            winner = "DRAW";
-            playerScore++;
-            computerScore++;
-        }
-        else if(playerSelection === "ROCK" && computerSelection === "SCISSORS"){
-            winner = "PLAYER WINNS!";
-            playerScore++;
-        }
-        else if(playerSelection === "PAPER" && computerSelection === "ROCK"){
-            winner = "PLAYER WINNS!";
-            playerScore++;
-        }
-        else if(playerSelection === "SCISSORS" && computerSelection === "PAPER"){
-            winner = "PLAYER WINNS!";
-            playerScore++;
-        }
-        else{
-            winner = "COMPUTER WINNS!";
-            computerScore++;
-        }   
+    let finalWinner = "";
+    
+    if(playerChoice === computerChoice){  // determine who wins
+        winner = "DRAW";
+        playerScore++;
+        computerScore++;
+    }
+    else if(playerChoice === "ROCK" && computerChoice === "SCISSORS"){
+        winner = "PLAYER WINNS!";
+        playerScore++;
+    }
+    else if(playerChoice === "PAPER" && computerChoice === "ROCK"){
+        winner = "PLAYER WINNS!";
+        playerScore++;
+    }
+    else if(playerChoice === "SCISSORS" && computerChoice === "PAPER"){
+        winner = "PLAYER WINNS!";
+        playerScore++;
     }
     else{
-        winner = "YOU CAN ONLY CHOOSE ROCK, PAPER or SCISSORS";
-    }
+        winner = "COMPUTER WINNS!";
+        computerScore++;
+    }   
+   
+    pScore.textContent = playerScore;
+    cScore.textContent= computerScore;
+    pChoice.textContent = playerChoice;
+    cChoice.textContent= computerChoice;
+    rWinner.textContent = winner;
 
+    if(playerScore == 5){  // if either gets 5 wins declare the winner and reset the score
+            playerScore = 0;
+            computerScore = 0;
+            finalWinner = "PLAYER IS THE FINAL WINNER!";
 
-    console.log(winner);
-    console.log(`Player score: ${playerScore}`);
-    console.log(`Computer score: ${computerScore}`);
-    return winner;;
+        } else if(computerScore == 5){
+            playerScore = 0;
+            computerScore = 0;
+            finalWinner = "COMPUTER IS THE FINAL WINNER, YOU LOOSE!"
 
-     
+        } else if(playerScore == 5 || computerScore == 5){
+            playerScore = 0;
+            computerScore = 0;
+            finalWinner = "WOW IT's A DRAW!"
+
+        }
+
+    fWinner.textContent = finalWinner;
+    
 }
 
-
-function game (rounds){
-    for (let i = 0; i < rounds; i++){
-        playRound(getPlayerChoice(), getComputerChoice());
-    }
-}
+const btns = document.querySelectorAll("button");
 
 
-game(5);
+btns.forEach(btn => {  // on click, first get computer and player choices, than play one round
+    btn.addEventListener("click",getComputerChoice)
+    btn.addEventListener("click",(e) => playerChoice = e.target.value)  // get the value of the button that was clicked
+    btn.addEventListener("click",playRound)
+})
+    
+
+
+
+
